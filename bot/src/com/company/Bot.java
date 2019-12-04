@@ -37,6 +37,7 @@ public class Bot
                 var h = new History();
                 s1.append(h.generateQuestion()); // любой вопрос из набора
                 answer = s1.toString();
+                game = new History();
             }
             else if (input.equals("2"))
             {
