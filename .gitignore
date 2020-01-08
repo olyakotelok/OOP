@@ -1,5 +1,5 @@
 /target/
-/bot2.iml
+*.iml
 /pom.xml
 /.idea/
 /out/
