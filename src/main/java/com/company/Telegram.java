@@ -7,15 +7,18 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.util.HashMap;
+
 public class Telegram extends TelegramLongPollingBot implements ICommunicationType {
-    private Bot bot = new Bot();
+    private HashMap<String, Bot> bots = new HashMap<String, Bot>();
     private Update update;
 
     @Override
     public void onUpdateReceived(Update update) {
         this.update = update;
         String text = update.getMessage().getText().toLowerCase();
-        getMsg(text);
+        String id = update.getMessage().getChatId().toString();
+        getMsg(text, id);
         System.out.println(text);
     }
 
@@ -32,18 +35,23 @@ public class Telegram extends TelegramLongPollingBot implements ICommunicationTy
         {
             e.printStackTrace();
         }
-
     }
 
     @Override
-    public String getBotUsername() {return System.getenv().get("BotUsername");}
+    public String getBotUsername() {return System.getenv("BotUsername");}
 
     @Override
-    public String getBotToken() {return System.getenv().get("BotToken");}
+    public String getBotToken() {return System.getenv("BotToken");}
 
     @Override
-    public void getMsg(String update) {
-        bot.communicate(update);
-        sendMessage(bot.answer);
+    public void getMsg(String message, String id) {
+        synchronized(bots) {
+            if (!bots.containsKey(id)) {
+                bots.put(id, new Bot());
+            }
+            Bot bot = bots.get(id);
+            bot.communicate(message);
+            sendMessage(bot.answer);
+        }
     }
 }

@@ -3,5 +3,5 @@ package com.company.interfaces;
 
 public interface ICommunicationType
 {
-    void getMsg(String update);
+    void getMsg(String message, String id);
 }

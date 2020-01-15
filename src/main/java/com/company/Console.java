@@ -16,11 +16,11 @@ public class Console implements ICommunicationType {
         sendMsg(bot.getWelcomeMsg());
         while (true)
         {
-            getMsg(input.nextLine());
+            getMsg(input.nextLine(), "console");
         }
     }
 
-    public void getMsg(String update)
+    public void getMsg(String update, String id)
     {
         bot.communicate(update);
         sendMsg(bot.answer);
