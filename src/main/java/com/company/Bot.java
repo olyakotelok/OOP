@@ -10,11 +10,11 @@ public class Bot
     private IGame game;
     private IGame[] games = new IGame[]{new Goroda(), new MathGame()};
     private MemoryGame memory = new MemoryGame();
-    private String answer;
+    public String answer;
     private boolean sendWelcomeMsg = false;
     private Integer numberGame;
 
-    public void sendWelcomeMsg()
+    public String getWelcomeMsg()
     {
         StringBuilder output = new StringBuilder();
         output.append("Выберите игру:\n");
@@ -22,16 +22,9 @@ public class Bot
         {
             output.append(games[i].getName() + "-" + i + "\n");
         }
-        answer = output.toString();
         sendWelcomeMsg = true;
+        return output.toString();
     }
-
-    public String getAnswer()
-    {
-        return answer;
-    }
-
-
 
     private boolean tryParseInt(String value)
     {
@@ -88,7 +81,7 @@ public class Bot
 
         if ("/start".equals(text))
         {
-            sendWelcomeMsg();
+            getWelcomeMsg();
             return;
         }
 
@@ -102,7 +95,7 @@ public class Bot
         {
             memory.saveLastGame(game);
             game = null;
-            sendWelcomeMsg();
+            getWelcomeMsg();
             answer = "игра сохранена! \n" + answer;
             return;
         }
@@ -122,7 +115,7 @@ public class Bot
         if ("не сохранять".equals(text))
         {
             game = null;
-            sendWelcomeMsg();
+            getWelcomeMsg();
             return;
         }
         progressInput(text);
@@ -164,7 +157,7 @@ public class Bot
         {
             games[numberGame] = new MathGame();
         }
-        sendWelcomeMsg();
+        getWelcomeMsg();
         answer = "Игра окончена \n" + answer;
         if (memory.getLastGame().isFinished())
         {

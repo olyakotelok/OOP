@@ -51,6 +51,6 @@ public class Telegram extends TelegramLongPollingBot implements ICommunicationTy
     @Override
     public void getMsg(String update) {
         bot.communicate(update);
-        sendMessage(bot.getAnswer());
+        sendMessage(bot.answer);
     }
 }

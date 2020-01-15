@@ -13,8 +13,7 @@ public class Console implements ICommunicationType {
     }
 
     private void start() {
-        bot.sendWelcomeMsg();
-        sendMsg(bot.getAnswer());
+        sendMsg(bot.getWelcomeMsg());
         while (true)
         {
             getMsg(input.nextLine());
@@ -24,7 +23,7 @@ public class Console implements ICommunicationType {
     public void getMsg(String update)
     {
         bot.communicate(update);
-        sendMsg(bot.getAnswer());
+        sendMsg(bot.answer);
     }
 
     private void sendMsg(String str)
