@@ -10,9 +10,9 @@ public class Bot
     private IGame game;
     private IGame[] games = new IGame[]{new Goroda(), new MathGame()};
     private MemoryGame memory = new MemoryGame();
-    public String answer;
     private boolean sendWelcomeMsg = false;
     private Integer numberGame;
+    public String answer;
 
     public String getWelcomeMsg()
     {
@@ -23,7 +23,8 @@ public class Bot
             output.append(games[i].getName() + "-" + i + "\n");
         }
         sendWelcomeMsg = true;
-        return output.toString();
+        answer = output.toString();
+        return answer;
     }
 
     private boolean tryParseInt(String value)
