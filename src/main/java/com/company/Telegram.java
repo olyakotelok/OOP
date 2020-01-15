@@ -36,17 +36,10 @@ public class Telegram extends TelegramLongPollingBot implements ICommunicationTy
     }
 
     @Override
-    public String getBotUsername()
-    {
-        return "GameOJ_bot";
-    }
+    public String getBotUsername() {return System.getenv().get("BotUsername");}
 
     @Override
-    public String getBotToken()
-    {
-        return "924346334:AAEUVoLozCIkgjMOv0N9M8b7ndd-aDQFf1A";
-
-    }
+    public String getBotToken() {return System.getenv().get("BotToken");}
 
     @Override
     public void getMsg(String update) {
