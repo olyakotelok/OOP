@@ -160,10 +160,10 @@ public class Bot
         }
         getWelcomeMsg();
         answer = "Игра окончена \n" + answer;
-        if (memory.getLastGame().isFinished())
-        {
-            memory.saveLastGame(null);
-        }
+        //if (memory.getLastGame().isFinished())
+        //{
+        //    memory.saveLastGame(null);
+        //}
         game = null;
         return;
     }

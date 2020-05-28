@@ -91,11 +91,6 @@ public class Goroda implements IGame
         return finished;
     }
 
-    public String getQuest()
-    {
-        return null;
-    }
-
     private boolean inBase(String value)
     {
         for (String s : cities)
