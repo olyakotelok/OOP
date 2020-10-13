@@ -6,8 +6,13 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Telegram extends TelegramLongPollingBot implements ICommunicationType {
     private HashMap<String, Bot> bots = new HashMap<String, Bot>();
@@ -26,6 +31,18 @@ public class Telegram extends TelegramLongPollingBot implements ICommunicationTy
         Message msg = update.getMessage();
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
+        //keyboard
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(true);
+
+        KeyboardRow keyboardFirstRow = new KeyboardRow();
+        keyboardFirstRow.add("Города");
+        keyboardFirstRow.add("Математика");
+        replyKeyboardMarkup.setKeyboard(Collections.singletonList(keyboardFirstRow));
+
         sendMessage.setChatId(msg.getChatId());
         sendMessage.setText(text);
         try {

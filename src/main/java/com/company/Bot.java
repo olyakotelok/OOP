@@ -43,6 +43,12 @@ public class Bot
 
     private Integer getGameNumber(String userChoice)
     {
+        if (userChoice.equals("города")){
+            return 0;
+        }
+        if (userChoice.equals("математика")){
+            return 1;
+        }
         if (!(tryParseInt(userChoice) && (Integer.parseInt(userChoice) < games.length)))
         {
             answer = "Введите корректное значение";
@@ -92,14 +98,19 @@ public class Bot
             return;
         }
 
+        if("новая".equals(text)) {
+
+        }
+
         if ("новая".equals(text) || "сохранить".equals(text))
         {
             memory.saveLastGame(game);
-            game = null;
+            //game = null;
             getWelcomeMsg();
             answer = "игра сохранена! \n" + answer;
             return;
         }
+
         if ("последняя".equals(text))
         {
             IGame gameNow = memory.getLastGame();
