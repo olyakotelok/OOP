@@ -36,12 +36,6 @@ public class Goroda implements IGame
     }
 
     @Override
-    public String getLastMessage()
-    {
-        return lastMessage;
-    }
-
-    @Override
     public void readMessage(String str)
     {
         str = str.toLowerCase();
