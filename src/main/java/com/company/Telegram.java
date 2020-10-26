@@ -21,13 +21,18 @@ public class Telegram extends TelegramLongPollingBot implements ICommunicationTy
     @Override
     public void onUpdateReceived(Update update) {
         this.update = update;
-        String text = update.getMessage().getText().toLowerCase();
+        String text = update.getMessage().getText();
         String id = update.getMessage().getChatId().toString();
-        getMsg(text, id);
         System.out.println(text);
+        if (text != null){
+            getMsg(text, id);
+            System.out.println(text);}
+        else {
+            sendMessage("Введите корректное значение", false);
+        }
     }
 
-    private void sendMessage(String text) {
+    private void sendMessage(String text, Boolean inGame) {
         Message msg = update.getMessage();
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
@@ -39,8 +44,14 @@ public class Telegram extends TelegramLongPollingBot implements ICommunicationTy
         replyKeyboardMarkup.setOneTimeKeyboard(true);
 
         KeyboardRow keyboardFirstRow = new KeyboardRow();
+        if (!inGame){
         keyboardFirstRow.add("Города");
-        keyboardFirstRow.add("Математика");
+        keyboardFirstRow.add("Математика");}
+        else {
+            keyboardFirstRow.add("Закончить");
+            keyboardFirstRow.add("Сохранить");
+            keyboardFirstRow.add("/help");
+        }
         replyKeyboardMarkup.setKeyboard(Collections.singletonList(keyboardFirstRow));
 
         sendMessage.setChatId(msg.getChatId());
@@ -68,7 +79,7 @@ public class Telegram extends TelegramLongPollingBot implements ICommunicationTy
             }
             Bot bot = bots.get(id);
             bot.communicate(message);
-            sendMessage(bot.answer);
+            sendMessage(bot.answer, bot.inGame());
         }
     }
 }
