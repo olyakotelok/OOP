@@ -29,7 +29,7 @@ public class MathGame implements IGame
     {
         quest = GenerateQuest();
         return "Привет, я пишу тебе задачку, а ты пишешь мне ответ.\n"+
-        " Как надоест скажи:  хватит , а напомить правила можно командой \\help \n"+quest.getValue();
+        " Как надоест скажи:  хватит , а напомить правила можно командой /help \n"+quest.getValue();
     }
 
     public String getName()

@@ -8,14 +8,14 @@ public class Goroda implements IGame
 {
     private String[] cities = new String[]
             {
-            "москва",
-            "анадырь",
-            "ростов",
-            "волгоград",
-            "донецк"
+            "Москва",
+            "Анадырь",
+            "Ростов",
+            "Волгоград",
+            "Донецк"
             };
     private HashSet<String> usedCities = new HashSet<>();
-    private String currentCity;
+    private String currentCity = "Амстердам";
     private String err;
     private String lastLetter = "м";
     private Boolean finished = false;
@@ -23,22 +23,16 @@ public class Goroda implements IGame
 
     public String start()
     {
-        return "Начнем играть в города!\n" +
+        return (currentCity == "Амстердам" ? "Начнем" : "Продолжим") + " играть в города!\n" +
                 "Я называю город, ты называешь город на последнюю букву моего и так далее...\n" +
                 "Чтобы закончить, введи: хватит\n"+
-                "Амстердам";
+                currentCity;
 
     }
 
     public String getName()
     {
         return "Города";
-    }
-
-    @Override
-    public String getLastMessage()
-    {
-        return lastMessage;
     }
 
     @Override
@@ -91,16 +85,11 @@ public class Goroda implements IGame
         return finished;
     }
 
-    public String getQuest()
-    {
-        return null;
-    }
-
     private boolean inBase(String value)
     {
         for (String s : cities)
         {
-            if (s.equals(value))
+            if (s.toLowerCase().equals(value))
             {
                 return true;
             }
@@ -112,7 +101,7 @@ public class Goroda implements IGame
     {
         for (String city : cities)
         {
-            if (city.startsWith(value) && !usedCities.contains(city))
+            if (city.toLowerCase().startsWith(value) && !usedCities.contains(city))
             {
                 return city;
             }
@@ -136,6 +125,6 @@ public class Goroda implements IGame
     public String getHelp()
     {
         return "Я называю город, ты называешь город на последнюю букву моего и так далее...\n" +
-        "Чтобы закончить, введи: хватит\n"+ "Напомнить правила можно командной \\help";
+                "Чтобы закончить, введи: хватит\nНапомнить правила можно командной \\help";
     }
 }

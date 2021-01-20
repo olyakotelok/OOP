@@ -20,7 +20,7 @@ public class Bot
         output.append("Выберите игру:\n");
         for (int i=0; i<games.length; i++)
         {
-            output.append(games[i].getName() + "-" + i + "\n");
+            output.append(games[i].getName() + "\n");
         }
         sendWelcomeMsg = true;
         answer = output.toString();
@@ -43,56 +43,61 @@ public class Bot
 
     private Integer getGameNumber(String userChoice)
     {
-        if (!(tryParseInt(userChoice) && (Integer.parseInt(userChoice) < games.length)))
+        if (userChoice.equals("города")){
+            return 0;
+        }
+        else if (userChoice.equals("математика")){
+            return 1;
+        }
+        else
         {
             answer = "Введите корректное значение";
             return null;
         }
-        return Integer.parseInt(userChoice);
+    }
+
+    public boolean inGame(){
+        return game!=null;
     }
 
     public void communicate(String msg)
     {
         String text = msg.toLowerCase();
 
-        if (sendWelcomeMsg) //after sending welcome msg
-        {
-            numberGame = getGameNumber(text);
-            if (numberGame != null)
-            {
-                IGame g = memory.getLastGame();
-
-                if (g != null)
-                {
-                    if ((numberGame == 0 && g instanceof Goroda) || (numberGame == 1 && g instanceof MathGame))
-                    {
-                        game = g;
-                        continiuePlay();
-                    }
-                }
-                else {
-                    game = games[numberGame];
-                    startPlay();
-                }
-
-            }
-            sendWelcomeMsg = false;
-            return;
-        }
-
-        if ("/start".equals(text))
-        {
-            getWelcomeMsg();
-            return;
-        }
-
-        if ("help".equals(text))
+        if ("/help".equals(text))
         {
             game.getHelp();
             return;
         }
 
-        if ("новая".equals(text) || "сохранить".equals(text))
+        if ("/start".equals(text))
+        {
+            game = null;
+            getWelcomeMsg();
+            return;
+        }
+
+        if ("последняя".equals(text))
+        {
+            IGame gameNow = memory.getLastGame();
+            if (gameNow != null){
+            memory.saveLastGame(game);
+            game = gameNow;
+            startPlay();
+            return;
+            }
+        }
+
+        if (game == null) //game didn't start
+        {
+            numberGame = getGameNumber(text);
+            IGame g = memory.getLastGame();
+            game = numberGame != null ? games[numberGame] : g;
+            startPlay();
+            return;
+        }
+
+        if ("сохранить".equals(text))
         {
             memory.saveLastGame(game);
             game = null;
@@ -100,14 +105,14 @@ public class Bot
             answer = "игра сохранена! \n" + answer;
             return;
         }
-        if ("последняя".equals(text))
-        {
-            IGame gameNow = memory.getLastGame();
-            memory.saveLastGame(game);
-            game = gameNow;
+
+        if ("новая".equals(text)){
+            game = null;
+            getWelcomeMsg();
             return;
         }
-        if ("хватит".equals(text))
+
+        if ("закончить".equals(text))
         {
             answer = "Чтобы сохранить игру, введи сохранить. Иначе введи не сохранять.";
             return;
@@ -127,8 +132,10 @@ public class Bot
         StringBuilder output = new StringBuilder();
         output.append("Если захочешь сменить игру, скажи: новая\n");
         output.append("Если захочешь вернуться к последней игре: последняя\n");
+        System.out.println("hh");
         output.append(game.start());
         answer = output.toString();
+        System.out.println(answer);
     }
 
     private void progressInput(String text)
@@ -160,16 +167,11 @@ public class Bot
         }
         getWelcomeMsg();
         answer = "Игра окончена \n" + answer;
-        if (memory.getLastGame().isFinished())
-        {
-            memory.saveLastGame(null);
-        }
+        //if (memory.getLastGame().isFinished())
+        //{
+        //    memory.saveLastGame(null);
+        //}
         game = null;
         return;
-    }
-
-    private void continiuePlay()
-    {
-        answer = game.getLastMessage();
     }
 }
