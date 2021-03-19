@@ -13,7 +13,7 @@ public class Console implements ICommunicationType {
         start();
     }
 
-    private void start() {
+    public void start() {
         sendMsg(bot.getWelcomeMsg());
         while (true) {
             getMsg(input.nextLine(), "console");

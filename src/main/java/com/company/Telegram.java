@@ -2,11 +2,14 @@ package com.company;
 
 import com.company.interfaces.ICommunicationType;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -55,10 +58,10 @@ public class Telegram extends TelegramLongPollingBot implements ICommunicationTy
         SendMessage sendMessage = SendMessage.
                 builder()
                 .replyMarkup(replyKeyboardMarkup)
+                .parseMode(ParseMode.MARKDOWN)
                 .chatId(chatId)
                 .text(text)
                 .build();
-        sendMessage.enableMarkdown(true);
 
         try {
             execute(sendMessage);
@@ -87,5 +90,11 @@ public class Telegram extends TelegramLongPollingBot implements ICommunicationTy
             bot.communicate(message);
             sendMessage(bot.answer, bot.inGame());
         }
+    }
+
+    @Override
+    public void start() throws TelegramApiException {
+        TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
+        telegramBotsApi.registerBot(this);
     }
 }
