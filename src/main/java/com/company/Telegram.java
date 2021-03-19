@@ -22,10 +22,10 @@ public class Telegram extends TelegramLongPollingBot implements ICommunicationTy
         String text = update.getMessage().getText();
         String id = update.getMessage().getChatId().toString();
         System.out.println(text);
-        if (text != null){
+        if (text != null) {
             getMsg(text, id);
-            System.out.println(text);}
-        else {
+            System.out.println(text);
+        } else {
             sendMessage("Введите корректное значение", false);
         }
     }
@@ -62,22 +62,24 @@ public class Telegram extends TelegramLongPollingBot implements ICommunicationTy
 
         try {
             execute(sendMessage);
-        }
-        catch (TelegramApiException e)
-        {
+        } catch (TelegramApiException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public String getBotUsername() {return System.getenv("BotUsername");}
+    public String getBotUsername() {
+        return System.getenv("BotUsername");
+    }
 
     @Override
-    public String getBotToken() {return System.getenv("BotToken");}
+    public String getBotToken() {
+        return System.getenv("BotToken");
+    }
 
     @Override
     public void getMsg(String message, String id) {
-        synchronized(bots) {
+        synchronized (bots) {
             if (!bots.containsKey(id)) {
                 bots.put(id, new Bot());
             }
