@@ -3,7 +3,6 @@ package com.company;
 import com.company.interfaces.ICommunicationType;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -11,7 +10,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Telegram extends TelegramLongPollingBot implements ICommunicationType {
@@ -33,29 +31,35 @@ public class Telegram extends TelegramLongPollingBot implements ICommunicationTy
     }
 
     private void sendMessage(String text, Boolean inGame) {
-        Message msg = update.getMessage();
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.enableMarkdown(true);
-        //keyboard
-        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-        sendMessage.setReplyMarkup(replyKeyboardMarkup);
-        replyKeyboardMarkup.setSelective(true);
-        replyKeyboardMarkup.setResizeKeyboard(true);
-        replyKeyboardMarkup.setOneTimeKeyboard(true);
-
         KeyboardRow keyboardFirstRow = new KeyboardRow();
-        if (!inGame){
-        keyboardFirstRow.add("Города");
-        keyboardFirstRow.add("Математика");}
-        else {
+        if (inGame) {
             keyboardFirstRow.add("Закончить");
             keyboardFirstRow.add("Сохранить");
             keyboardFirstRow.add("/help");
+        } else {
+            keyboardFirstRow.add("Города");
+            keyboardFirstRow.add("Математика");
         }
-        replyKeyboardMarkup.setKeyboard(Collections.singletonList(keyboardFirstRow));
+        List<KeyboardRow> keyboard = Collections.singletonList(keyboardFirstRow);
 
-        sendMessage.setChatId(msg.getChatId());
-        sendMessage.setText(text);
+        ReplyKeyboardMarkup replyKeyboardMarkup = ReplyKeyboardMarkup
+                .builder()
+                .selective(true)
+                .resizeKeyboard(true)
+                .oneTimeKeyboard(true)
+                .keyboard(keyboard)
+                .build();
+
+        String chatId = Long.toString(update.getMessage().getChatId());
+
+        SendMessage sendMessage = SendMessage.
+                builder()
+                .replyMarkup(replyKeyboardMarkup)
+                .chatId(chatId)
+                .text(text)
+                .build();
+        sendMessage.enableMarkdown(true);
+
         try {
             execute(sendMessage);
         }
