@@ -17,7 +17,8 @@ public class Main {
         try {
             communicationType.start();
         } catch (Exception e) {
-            System.out.println("Не удалось запустить бота в выбранной среде, попробуйте другую.");
+            System.out.println("Не удалось запустить бота в выбранной среде, потому что вот что:");
+            e.printStackTrace();
         }
     }
 }
