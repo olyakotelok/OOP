@@ -13,12 +13,12 @@ public class Main {
     public static void main(String[] args)
     {
         System.out.println("Введите t чтобы запустить бота в Telegram, любой другой ответ - бот в консоли");
-        Scanner input = new Scanner(System.in);
-        String type = input.nextLine();
-        if ("t".equals(type))
+       // Scanner input = new Scanner(System.in);
+       // String type = input.nextLine();
+        //if ("t".equals(type))
             start(new Telegram());
-        else
-            start(new Console());
+        //else
+         //   start(new Console());
     }
 
     static
