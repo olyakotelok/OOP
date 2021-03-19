@@ -9,15 +9,14 @@ import java.util.HashSet;
 import java.util.Map;
 
 
-public class Goroda implements IGame
-{
+public class Goroda implements IGame {
     private String[] cities = new String[]
             {
-            "Москва",
-            "Анадырь",
-            "Ростов",
-            "Волгоград",
-            "Донецк"
+                    "Москва",
+                    "Анадырь",
+                    "Ростов",
+                    "Волгоград",
+                    "Донецк"
             };
     private HashSet<String> usedCities = new HashSet<>();
     private String currentCity = "Амстердам";
@@ -26,38 +25,32 @@ public class Goroda implements IGame
     private Boolean finished = false;
     private String lastMessage;
 
-    public String start()
-    {
+    public String start() {
         return (currentCity == "Амстердам" ? "Начнем" : "Продолжим") + " играть в города!\n" +
                 "Я называю город, ты называешь город на последнюю букву моего и так далее...\n" +
-                "Чтобы закончить, введи: хватит\n"+
+                "Чтобы закончить, введи: хватит\n" +
                 currentCity;
 
     }
 
-    public String getName()
-    {
+    public String getName() {
         return "Города";
     }
 
     @Override
-    public void readMessage(String str)
-    {
+    public void readMessage(String str) {
         str = str.toLowerCase();
 
-        if (!str.substring(0,1).equals(lastLetter))
-        {
+        if (!str.substring(0, 1).equals(lastLetter)) {
             err = "Нужен город на букву " + lastLetter;
             return;
         }
 
-        if (!inBase(str))
-        {
+        if (!inBase(str)) {
             err = "Я не знаю такого города";
             return;
         }
-        if (usedCities.contains(str))
-        {
+        if (usedCities.contains(str)) {
             err = "Этот город уже был";
             return;
         }
@@ -67,15 +60,13 @@ public class Goroda implements IGame
 
     @Override
     public String getMessage() {
-        if (err != null)
-        {
+        if (err != null) {
             lastMessage = err;
             return err;
         }
 
         String city = find(lastLetter);
-        if (city != null)
-        {
+        if (city != null) {
             updateCurrentCity(city);
             lastMessage = city;
             return city;
@@ -85,55 +76,45 @@ public class Goroda implements IGame
     }
 
     @Override
-    public boolean isFinished()
-    {
+    public boolean isFinished() {
         return finished;
     }
 
-    private boolean inBase(String value)
-    {
-        for (String s : cities)
-        {
-            if (s.toLowerCase().equals(value))
-            {
+    private boolean inBase(String value) {
+        for (String s : cities) {
+            if (s.toLowerCase().equals(value)) {
                 return true;
             }
         }
         return false;
     }
 
-    private String find(String value)
-    {
-        for (String city : cities)
-        {
-            if (city.toLowerCase().startsWith(value) && !usedCities.contains(city))
-            {
+    private String find(String value) {
+        for (String city : cities) {
+            if (city.toLowerCase().startsWith(value) && !usedCities.contains(city)) {
                 return city;
             }
         }
         return null;
     }
 
-    private void updateCurrentCity(String city)
-    {
+    private void updateCurrentCity(String city) {
         usedCities.add(city);
         currentCity = city;
         int lastIndex = currentCity.length();
         lastLetter = currentCity.substring(lastIndex - 1);
-        if (lastLetter.equals("ь") || lastLetter.equals("ы"))
-        {
-            lastLetter = currentCity.substring(lastIndex-2, lastIndex - 1);
+        if (lastLetter.equals("ь") || lastLetter.equals("ы")) {
+            lastLetter = currentCity.substring(lastIndex - 2, lastIndex - 1);
         }
     }
 
     @Override
-    public String getHelp()
-    {
+    public String getHelp() {
         return "Я называю город, ты называешь город на последнюю букву моего и так далее...\n" +
                 "Чтобы закончить, введи: хватит\nНапомнить правила можно командной \\help";
     }
 
-    public Map<String, String> getWikiInfo(String city) throws Exception{
+    public Map<String, String> getWikiInfo(String city) throws Exception {
         Map<String, String> wikiInfo = new HashMap<String, String>();
         String url = "https://ru.wikipedia.org/w/api.php?format=json&action=query&prop=pageimages%7Cextracts&exintro&explaintext&images&pithumbsize=300&titles=" + city;
         URL wikiApi = new URL(url);

@@ -5,8 +5,7 @@ import com.company.games.MathGame;
 import com.company.interfaces.IGame;
 
 
-public class Bot
-{
+public class Bot {
     private IGame game;
     private IGame[] games = new IGame[]{new Goroda(), new MathGame()};
     private MemoryGame memory = new MemoryGame();
@@ -14,12 +13,10 @@ public class Bot
     private Integer numberGame;
     public String answer;
 
-    public String getWelcomeMsg()
-    {
+    public String getWelcomeMsg() {
         StringBuilder output = new StringBuilder();
         output.append("Выберите игру:\n");
-        for (int i=0; i<games.length; i++)
-        {
+        for (int i = 0; i < games.length; i++) {
             output.append(games[i].getName() + "\n");
         }
         sendWelcomeMsg = true;
@@ -27,64 +24,52 @@ public class Bot
         return answer;
     }
 
-    private boolean tryParseInt(String value)
-    {
-        try
-        {
+    private boolean tryParseInt(String value) {
+        try {
             Integer.parseInt(value);
             return true;
-        }
-        catch (NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             return false;
         }
     }
 
 
-    private Integer getGameNumber(String userChoice)
-    {
-        if (userChoice.equals("города")){
+    private Integer getGameNumber(String userChoice) {
+        if (userChoice.equals("города")) {
             return 0;
-        }
-        else if (userChoice.equals("математика")){
+        } else if (userChoice.equals("математика")) {
             return 1;
-        }
-        else
-        {
+        } else {
             answer = "Введите корректное значение";
             return null;
         }
     }
 
-    public boolean inGame(){
-        return game!=null;
+    public boolean inGame() {
+        return game != null;
     }
 
-    public void communicate(String msg)
-    {
+    public void communicate(String msg) {
         String text = msg.toLowerCase();
 
-        if ("/help".equals(text))
-        {
+        if ("/help".equals(text)) {
             game.getHelp();
             return;
         }
 
-        if ("/start".equals(text))
-        {
+        if ("/start".equals(text)) {
             game = null;
             getWelcomeMsg();
             return;
         }
 
-        if ("последняя".equals(text))
-        {
+        if ("последняя".equals(text)) {
             IGame gameNow = memory.getLastGame();
-            if (gameNow != null){
-            memory.saveLastGame(game);
-            game = gameNow;
-            startPlay();
-            return;
+            if (gameNow != null) {
+                memory.saveLastGame(game);
+                game = gameNow;
+                startPlay();
+                return;
             }
         }
 
@@ -97,8 +82,7 @@ public class Bot
             return;
         }
 
-        if ("сохранить".equals(text))
-        {
+        if ("сохранить".equals(text)) {
             memory.saveLastGame(game);
             game = null;
             getWelcomeMsg();
@@ -106,20 +90,18 @@ public class Bot
             return;
         }
 
-        if ("новая".equals(text)){
+        if ("новая".equals(text)) {
             game = null;
             getWelcomeMsg();
             return;
         }
 
-        if ("закончить".equals(text))
-        {
+        if ("закончить".equals(text)) {
             answer = "Чтобы сохранить игру, введи сохранить. Иначе введи не сохранять.";
             return;
         }
 
-        if ("не сохранять".equals(text))
-        {
+        if ("не сохранять".equals(text)) {
             game = null;
             getWelcomeMsg();
             return;
@@ -127,8 +109,7 @@ public class Bot
         progressInput(text);
     }
 
-    private void startPlay()
-    {
+    private void startPlay() {
         StringBuilder output = new StringBuilder();
         output.append("Если захочешь сменить игру, скажи: новая\n");
         output.append("Если захочешь вернуться к последней игре: последняя\n");
@@ -138,31 +119,24 @@ public class Bot
         System.out.println(answer);
     }
 
-    private void progressInput(String text)
-    {
+    private void progressInput(String text) {
         game.readMessage(text);
         String mess = game.getMessage();
-        if (mess == null)
-        {
+        if (mess == null) {
             answer = "Не знаю... Попробуй написать что-то еще";
             return;
         }
-        if (game.isFinished())
-        {
+        if (game.isFinished()) {
             finish();
             return;
         }
         answer = mess;
     }
 
-    private void finish()
-    {
-        if (game instanceof Goroda)
-        {
+    private void finish() {
+        if (game instanceof Goroda) {
             games[numberGame] = new Goroda();
-        }
-        else
-        {
+        } else {
             games[numberGame] = new MathGame();
         }
         getWelcomeMsg();

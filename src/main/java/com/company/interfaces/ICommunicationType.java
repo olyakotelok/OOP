@@ -1,7 +1,7 @@
 package com.company.interfaces;
 
 
-public interface ICommunicationType
-{
+public interface ICommunicationType {
     void getMsg(String message, String id);
+    void start() throws Exception;
 }

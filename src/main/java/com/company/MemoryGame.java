@@ -2,15 +2,14 @@ package com.company;
 
 import com.company.interfaces.IGame;
 
-public class MemoryGame
-{
+public class MemoryGame {
     private IGame lastGame;
-    public void saveLastGame(IGame game)
-    {
+
+    public void saveLastGame(IGame game) {
         lastGame = game;
     }
-    public IGame getLastGame()
-    {
-     return lastGame;
+
+    public IGame getLastGame() {
+        return lastGame;
     }
 }

@@ -7,33 +7,28 @@ import com.company.interfaces.IGame;
 import java.util.Random;
 
 
-public class MathGame implements IGame
-{
+public class MathGame implements IGame {
     private String out;
     private Pair<Integer, String> quest;
     private String lastMessage;
 
 
     @Override
-    public boolean isFinished()
-    {
+    public boolean isFinished() {
         return false;
     }
 
-    public String start()
-    {
+    public String start() {
         quest = GenerateQuest();
-        return "Привет, я пишу тебе задачку, а ты пишешь мне ответ.\n"+
-        " Как надоест скажи:  хватит , а напомить правила можно командой /help \n"+quest.getValue();
+        return "Привет, я пишу тебе задачку, а ты пишешь мне ответ.\n" +
+                " Как надоест скажи:  хватит , а напомить правила можно командой /help \n" + quest.getValue();
     }
 
-    public String getName()
-    {
+    public String getName() {
         return "Математика";
     }
 
-    private Pair<Integer, String> GenerateQuest()
-    {
+    private Pair<Integer, String> GenerateQuest() {
         Random random = new Random();
         String[] operations = new String[4];
         operations[0] = "+";
@@ -45,35 +40,29 @@ public class MathGame implements IGame
         int operation = random.nextInt(5);
         int answer = 0;
         String questText = "";
-        switch (operation)
-        {
-            case (0):
-            {
+        switch (operation) {
+            case (0): {
                 answer = a + b;
                 questText = a + operations[0] + b;
                 break;
             }
-            case (1):
-            {
+            case (1): {
                 answer = a - b;
                 questText = a + operations[1] + b;
                 break;
             }
-            case (2):
-            {
+            case (2): {
                 answer = a * b;
                 questText = a + operations[2] + b;
                 break;
             }
-            case (3):
-            {
+            case (3): {
                 answer = b;
                 if (a == 0) a = 1;
                 questText = a * b + operations[3] + a;
                 break;
             }
-            case (4):
-            {
+            case (4): {
                 answer = a + a * b - b * b;
                 questText = a + operations[0] + a + operations[2] + b + operations[1] + b + operations[2] + b;
             }
@@ -83,27 +72,22 @@ public class MathGame implements IGame
     }
 
     @Override
-    public void readMessage(String str)
-    {
+    public void readMessage(String str) {
         out = yMessage(str);
     }
 
     @Override
-    public String getMessage()
-    {
+    public String getMessage() {
         lastMessage = out;
         return out;
     }
 
-    public String getQuest()
-    {
+    public String getQuest() {
         return quest.getValue();
     }
 
-    private String yMessage(String userAnsw)
-    {
-        if (userAnsw.equals(Integer.toString(quest.getKey())))
-        {
+    private String yMessage(String userAnsw) {
+        if (userAnsw.equals(Integer.toString(quest.getKey()))) {
             quest = GenerateQuest();
             return "Правильно! \n" + quest.getValue();
         }
@@ -111,12 +95,11 @@ public class MathGame implements IGame
         String s = "Нет, правильный ответ " + quest.getKey() + "\n";
         quest = GenerateQuest();
         String a = quest.getValue();
-        return s+a;
+        return s + a;
     }
 
     @Override
-    public String getHelp()
-    {
+    public String getHelp() {
         return "Привет, я пишу тебе задачку, а ты пишешь мне ответ." +
                 " Как надоест скажи: хватит , а напомить правила можно командой \\help";
     }
