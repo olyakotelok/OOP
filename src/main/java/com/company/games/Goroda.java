@@ -1,7 +1,12 @@
 package com.company.games;
 
 import com.company.interfaces.IGame;
+
+import java.io.*;
+import java.net.*;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 
 public class Goroda implements IGame
@@ -126,5 +131,20 @@ public class Goroda implements IGame
     {
         return "Я называю город, ты называешь город на последнюю букву моего и так далее...\n" +
                 "Чтобы закончить, введи: хватит\nНапомнить правила можно командной \\help";
+    }
+
+    public Map<String, String> getWikiInfo(String city) throws Exception{
+        Map<String, String> wikiInfo = new HashMap<String, String>();
+        String url = "https://ru.wikipedia.org/w/api.php?format=json&action=query&prop=pageimages%7Cextracts&exintro&explaintext&images&pithumbsize=300&titles=" + city;
+        URL wikiApi = new URL(url);
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(wikiApi.openStream()));
+
+        String inputLine;
+        while ((inputLine = in.readLine()) != null)
+            System.out.println(inputLine); //Можно   накапливать в StringBuilder а потом присвоить перемной String результат накопления
+        in.close();
+
+        return wikiInfo;
     }
 }

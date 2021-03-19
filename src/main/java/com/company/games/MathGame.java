@@ -13,11 +13,6 @@ public class MathGame implements IGame
     private Pair<Integer, String> quest;
     private String lastMessage;
 
-    @Override
-    public String getLastMessage()
-    {
-        return lastMessage;
-    }
 
     @Override
     public boolean isFinished()
