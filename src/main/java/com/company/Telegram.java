@@ -60,7 +60,7 @@ public class Telegram extends TelegramLongPollingBot implements ICommunicationTy
         SendMessage sendMessage = SendMessage.
                 builder()
                 .replyMarkup(replyKeyboardMarkup)
-                .parseMode(ParseMode.MARKDOWN)
+                .parseMode(ParseMode.HTML)
                 .chatId(chatId)
                 .text(text)
                 .build();
