@@ -106,7 +106,7 @@ public class Bot {
             getWelcomeMsg();
             return;
         }
-        progressInput(text);
+        processInput(text);
     }
 
     private void startPlay() {
@@ -119,10 +119,9 @@ public class Bot {
         System.out.println(answer);
     }
 
-    private void progressInput(String text) {
-        game.readMessage(text);
-        String mess = game.getMessage();
-        if (mess == null) {
+    private void processInput(String text) {
+        String msg = game.answerMessage(text);
+        if (msg == null) {
             answer = "Не знаю... Попробуй написать что-то еще";
             return;
         }
@@ -130,7 +129,7 @@ public class Bot {
             finish();
             return;
         }
-        answer = mess;
+        answer = msg;
     }
 
     private void finish() {
