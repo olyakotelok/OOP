@@ -96,7 +96,7 @@ public class Bot {
             return;
         }
 
-        if ("закончить".equals(text)) {
+        if ("хватит".equals(text)) {
             answer = "Чтобы сохранить игру, введи сохранить. Иначе введи не сохранять.";
             return;
         }
