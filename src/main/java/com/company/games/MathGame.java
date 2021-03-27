@@ -1,15 +1,13 @@
 package com.company.games;
 
-import com.company.Pair;
+import com.company.Task;
 import com.company.interfaces.IGame;
-
 
 import java.util.Random;
 
 
 public class MathGame implements IGame {
-    private String out;
-    private Pair<Integer, String> quest;
+    private Task task;
     private String lastMessage;
 
 
@@ -19,16 +17,16 @@ public class MathGame implements IGame {
     }
 
     public String start() {
-        quest = GenerateQuest();
+        task = GenerateTask();
         return "Привет, я пишу тебе задачку, а ты пишешь мне ответ.\n" +
-                " Как надоест скажи:  хватит , а напомить правила можно командой /help \n" + quest.getValue();
+                " Как надоест скажи:  хватит , а напомить правила можно командой /help \n" + task.Question;
     }
 
     public String getName() {
         return "Математика";
     }
 
-    private Pair<Integer, String> GenerateQuest() {
+    private Task GenerateTask() {
         Random random = new Random();
         String[] operations = new String[4];
         operations[0] = "+";
@@ -68,34 +66,25 @@ public class MathGame implements IGame {
             }
         }
 
-        return new Pair<Integer, String>(answer, questText);
+        return new Task(answer, questText);
     }
 
     @Override
-    public void readMessage(String str) {
-        out = yMessage(str);
-    }
-
-    @Override
-    public String getMessage() {
-        lastMessage = out;
-        return out;
-    }
-
-    public String getQuest() {
-        return quest.getValue();
-    }
-
-    private String yMessage(String userAnsw) {
-        if (userAnsw.equals(Integer.toString(quest.getKey()))) {
-            quest = GenerateQuest();
-            return "Правильно! \n" + quest.getValue();
+    public String answerMessage(String str) {
+        if (str.equals(Integer.toString(task.Answer))) {
+            task = GenerateTask();
+            return save("Правильно! \n" + task.Question);
         }
 
-        String s = "Нет, правильный ответ " + quest.getKey() + "\n";
-        quest = GenerateQuest();
-        String a = quest.getValue();
-        return s + a;
+        String s = "Нет, правильный ответ " + task.Answer + "\n";
+        task = GenerateTask();
+        String a = task.Question;
+        return save(s + a);
+    }
+
+    private String save(String message) {
+        lastMessage = message;
+        return message;
     }
 
     @Override

@@ -1,14 +1,15 @@
 package com.company;
 
 import com.company.interfaces.ICommunicationType;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import java.util.Collections;
@@ -18,6 +19,7 @@ import java.util.List;
 public class Telegram extends TelegramLongPollingBot implements ICommunicationType {
     private HashMap<String, Bot> bots = new HashMap<String, Bot>();
     private Update update;
+    private Dotenv dotenv = Dotenv.load();
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -58,7 +60,7 @@ public class Telegram extends TelegramLongPollingBot implements ICommunicationTy
         SendMessage sendMessage = SendMessage.
                 builder()
                 .replyMarkup(replyKeyboardMarkup)
-                .parseMode(ParseMode.MARKDOWN)
+                .parseMode(ParseMode.HTML)
                 .chatId(chatId)
                 .text(text)
                 .build();
@@ -72,12 +74,12 @@ public class Telegram extends TelegramLongPollingBot implements ICommunicationTy
 
     @Override
     public String getBotUsername() {
-        return System.getenv("BotUsername");
+        return dotenv.get("BOT_USERNAME");
     }
 
     @Override
     public String getBotToken() {
-        return System.getenv("BotToken");
+        return dotenv.get("BOT_TOKEN");
     }
 
     @Override
