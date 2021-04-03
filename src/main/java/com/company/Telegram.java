@@ -6,6 +6,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
@@ -56,7 +57,6 @@ public class Telegram extends TelegramLongPollingBot implements ICommunicationTy
                 .build();
 
         String chatId = Long.toString(update.getMessage().getChatId());
-
         SendMessage sendMessage = SendMessage.
                 builder()
                 .replyMarkup(replyKeyboardMarkup)
@@ -89,8 +89,7 @@ public class Telegram extends TelegramLongPollingBot implements ICommunicationTy
                 bots.put(id, new Bot());
             }
             Bot bot = bots.get(id);
-            bot.communicate(message);
-            sendMessage(bot.answer, bot.inGame());
+            sendMessage(bot.communicate(message), bot.inGame());
         }
     }
 

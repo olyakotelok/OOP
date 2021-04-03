@@ -21,8 +21,7 @@ public class Console implements ICommunicationType {
     }
 
     public void getMsg(String update, String id) {
-        bot.communicate(update);
-        sendMsg(bot.answer);
+        sendMsg(bot.communicate(update));
     }
 
     private void sendMsg(String str) {
