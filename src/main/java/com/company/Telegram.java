@@ -27,7 +27,6 @@ public class Telegram extends TelegramLongPollingBot implements ICommunicationTy
         this.update = update;
         String text = update.getMessage().getText();
         String id = update.getMessage().getChatId().toString();
-        System.out.println(text);
         if (text != null) {
             getMsg(text, id);
             System.out.println(text);
@@ -39,9 +38,14 @@ public class Telegram extends TelegramLongPollingBot implements ICommunicationTy
     private void sendMessage(String text, Boolean inGame) {
         KeyboardRow keyboardFirstRow = new KeyboardRow();
         if (inGame) {
-            keyboardFirstRow.add("Закончить");
-            keyboardFirstRow.add("Сохранить");
-            keyboardFirstRow.add("/help");
+            keyboardFirstRow.add("Хватит");
+            keyboardFirstRow.add("Правила");
+            if (text == "Чтобы сохранить игру, введи сохранить. Иначе введи не сохранять.") {
+                keyboardFirstRow.remove("Хватит");
+                keyboardFirstRow.remove("Правила");
+                keyboardFirstRow.add("Сохранить");
+                keyboardFirstRow.add("Не сохранять");
+            }
         } else {
             keyboardFirstRow.add("Города");
             keyboardFirstRow.add("Математика");

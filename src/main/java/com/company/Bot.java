@@ -49,7 +49,7 @@ public class Bot {
     public String communicate(String msg) {
         String text = msg.toLowerCase();
 
-        if ("/help".equals(text)) {
+        if ("/help".equals(text) || "правила".equals(text)) {
             return game.getHelp();
         }
 
@@ -104,10 +104,8 @@ public class Bot {
         StringBuilder output = new StringBuilder();
         output.append("Если захочешь сменить игру, скажи: новая\n");
         output.append("Если захочешь вернуться к последней игре: последняя\n");
-        System.out.println("hh");
         output.append(game.start());
         String answer = output.toString();
-        System.out.println(answer);
         return answer;
     }
 

@@ -19,7 +19,7 @@ public class MathGame implements IGame {
     public String start() {
         task = GenerateTask();
         return "Привет, я пишу тебе задачку, а ты пишешь мне ответ.\n" +
-                " Как надоест скажи:  хватит , а напомить правила можно командой /help \n" + task.Question;
+                "Как надоест скажи: хватит, а напомить правила можно командой Помощь \n" + task.Question;
     }
 
     public String getName() {
@@ -90,6 +90,6 @@ public class MathGame implements IGame {
     @Override
     public String getHelp() {
         return "Привет, я пишу тебе задачку, а ты пишешь мне ответ." +
-                " Как надоест скажи: хватит , а напомить правила можно командой \\help";
+                "Как надоест скажи: хватит, а напомить правила можно командой Помощь";
     }
 }
