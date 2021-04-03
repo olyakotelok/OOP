@@ -1,5 +1,7 @@
 package com.company.games;
 
+import com.company.CityInfo;
+import com.company.WikiApi;
 import com.company.interfaces.IGame;
 
 import java.util.HashSet;
@@ -19,6 +21,7 @@ public class Goroda implements IGame {
     private String lastLetter = "м";
     private Boolean finished = false;
     private String lastMessage;
+    private WikiApi wikiApi = new WikiApi();
 
     public String start() {
         return (currentCity == "Амстердам" ? "Начнем" : "Продолжим") + " играть в города!\n" +
@@ -48,8 +51,12 @@ public class Goroda implements IGame {
         updateCurrentCity(str);
         String city = find(lastLetter);
         if (city != null) {
+            CityInfo info = wikiApi.getCityInfo(city);
             updateCurrentCity(city);
-            return save(city);
+            return save(info == null
+                    ? city
+                    : String.join("\n", "<b>" + info.Name + "</b>", info.Image, info.Info)
+            );
         }
 
         finished = true;
