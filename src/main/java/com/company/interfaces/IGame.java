@@ -1,9 +1,11 @@
 package com.company.interfaces;
 
+import com.company.Message;
+
 public interface IGame {
     String start();
 
-    String answerMessage(String str);
+    Message answerMessage(String str);
 
     String getName();
 

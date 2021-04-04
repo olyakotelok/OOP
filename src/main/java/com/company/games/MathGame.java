@@ -1,5 +1,6 @@
 package com.company.games;
 
+import com.company.Message;
 import com.company.Task;
 import com.company.interfaces.IGame;
 
@@ -70,7 +71,7 @@ public class MathGame implements IGame {
     }
 
     @Override
-    public String answerMessage(String str) {
+    public Message answerMessage(String str) {
         if (str.equals(Integer.toString(task.Answer))) {
             task = GenerateTask();
             return save("Правильно! \n" + task.Question);
@@ -82,9 +83,9 @@ public class MathGame implements IGame {
         return save(s + a);
     }
 
-    private String save(String message) {
+    private Message save(String message) {
         lastMessage = message;
-        return message;
+        return new Message(message);
     }
 
     @Override

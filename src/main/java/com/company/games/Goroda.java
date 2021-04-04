@@ -1,27 +1,55 @@
 package com.company.games;
 
 import com.company.CityInfo;
+import com.company.Message;
 import com.company.WikiApi;
 import com.company.interfaces.IGame;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.HashSet;
 
 
 public class Goroda implements IGame {
-    private String[] cities = new String[]
-            {
-                    "Москва",
-                    "Анадырь",
-                    "Ростов",
-                    "Волгоград",
-                    "Донецк"
-            };
-    private HashSet<String> usedCities = new HashSet<>();
+    private final String[] cities = getCities();
+    private final HashSet<String> usedCities = new HashSet<>();
     private String currentCity = "Амстердам";
     private String lastLetter = "м";
     private Boolean finished = false;
     private String lastMessage;
-    private WikiApi wikiApi = new WikiApi();
+    private final WikiApi wikiApi = new WikiApi();
+
+    public String[] getCities() {
+        String url = "https://raw.githubusercontent.com/pensnarik/russian-cities/master/russian-cities.json";
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .build();
+        HttpResponse<String> response;
+        try {
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            return new String[]{"Москва", "Амстердам", "Анадырь", "Ростов", "Волгоград", "Донецк"};
+        }
+
+        var resp = new JSONObject("{\"cities\": [" + response.body().substring(1, response.body().length() - 1) + "}");
+ //       var resp_array = resp.getJSONArray("cities");
+        System.out.println(resp.getJSONArray("cities"));
+        return null;
+//        String[] result = new String[]{};
+//        for (var i = 0; i < resp.length(); i++){
+//            var name = resp[i].getString("name");
+//            result[i] = name;
+//        }
+
+//        return result;
+    }
 
     public String start() {
         return (currentCity == "Амстердам" ? "Начнем" : "Продолжим") + " играть в города!\n" +
@@ -36,7 +64,7 @@ public class Goroda implements IGame {
     }
 
     @Override
-    public String answerMessage(String str) {
+    public Message answerMessage(String str) {
         str = str.toLowerCase();
 
         if (!str.substring(0, 1).equals(lastLetter))
@@ -55,12 +83,12 @@ public class Goroda implements IGame {
             updateCurrentCity(city);
             return save(info == null
                     ? city
-                    : String.join("\n", "<b>" + info.Name + "</b>", info.Image, info.Info)
+                    : String.join("\n", "<b>" + info.Name + "</b>", info.Info), info.Image
             );
         }
 
         finished = true;
-        return "Я не знаю подходящего города, игра окончена!";
+        return save("Я не знаю подходящего города, игра окончена!");
     }
 
     @Override
@@ -96,9 +124,14 @@ public class Goroda implements IGame {
         }
     }
 
-    private String save(String message) {
+    private Message save(String message) {
         lastMessage = message;
-        return message;
+        return new Message(message);
+    }
+
+    private Message save(String message, String image){
+        lastMessage = message;
+        return new Message(message, image);
     }
 
     @Override

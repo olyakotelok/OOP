@@ -22,16 +22,6 @@ public class Bot {
         return output.toString();
     }
 
-    private boolean tryParseInt(String value) {
-        try {
-            Integer.parseInt(value);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-
     private Integer getGameNumber(String userChoice) {
         if (userChoice.equals("города")) {
             return 0;
@@ -46,56 +36,61 @@ public class Bot {
         return game != null;
     }
 
-    public String communicate(String msg) {
+    public Message communicate(String msg) {
         String text = msg.toLowerCase();
+        String result = null;
 
         if ("/help".equals(text) || "правила".equals(text)) {
-            return game.getHelp();
+            result = game.getHelp();
         }
 
-        if ("/start".equals(text)) {
+        else if ("/start".equals(text)) {
             game = null;
-            return getWelcomeMsg();
+            result = getWelcomeMsg();
         }
 
-        if ("последняя".equals(text)) {
+        else if ("последняя".equals(text)) {
             IGame gameNow = memory.getLastGame();
             if (gameNow != null) {
                 memory.saveLastGame(game);
                 game = gameNow;
-                return startPlay();
+                result = startPlay();
             }
         }
 
-        if (game == null) //game didn't start
+        else if (game == null) //game didn't start
         {
             numberGame = getGameNumber(text);
-            if (numberGame == null) {
-                return "Введите корректное значение";
+            if (numberGame == null) result = "Введите корректное значение";
+            if (result == null) {
+                IGame g = memory.getLastGame();
+                game = numberGame != null ? games[numberGame] : g;
+                result = startPlay();
             }
-            IGame g = memory.getLastGame();
-            game = numberGame != null ? games[numberGame] : g;
-            return startPlay();
         }
 
-        if ("сохранить".equals(text)) {
+        else if ("сохранить".equals(text)) {
             memory.saveLastGame(game);
             game = null;
-            return "игра сохранена! \n" + getWelcomeMsg();
+            result = "игра сохранена! \n" + getWelcomeMsg();
         }
 
-        if ("новая".equals(text)) {
+        else if ("новая".equals(text)) {
             game = null;
-            return getWelcomeMsg();
+            result = getWelcomeMsg();
         }
 
-        if ("хватит".equals(text)) {
-            return "Чтобы сохранить игру, введи сохранить. Иначе введи не сохранять.";
+        else if ("хватит".equals(text)) {
+            result = "Чтобы сохранить игру, введи сохранить. Иначе введи не сохранять.";
         }
 
-        if ("не сохранять".equals(text)) {
+        else if ("не сохранять".equals(text)) {
             game = null;
-            return getWelcomeMsg();
+            result = getWelcomeMsg();
+        }
+
+        if (result != null) {
+            return new Message(result);
         }
         return processInput(text);
     }
@@ -109,15 +104,25 @@ public class Bot {
         return answer;
     }
 
-    private String processInput(String text) {
-        String msg = game.answerMessage(text);
-        if (msg == null) {
-            return "Не знаю... Попробуй написать что-то еще";
+    private Message processInput(String text) {
+        var msg = game.answerMessage(text);
+        String result = null;
+        if (msg.Text == null) {
+            result = "Не знаю... Попробуй написать что-то еще";
         }
-        if (game.isFinished()) {
-            return finish();
+        else if (game.isFinished()) {
+            result = finish();
         }
-        return msg;
+        if (result != null) {
+            return new Message(result);
+        }
+        else {
+            return msg;
+        }
+    }
+
+    private Message stringToMessage(String text) {
+        return new Message(text, null);
     }
 
     private String finish() {

@@ -8,4 +8,9 @@ public class Message {
         Text = text;
         Image = image;
     }
+
+    public Message(String text) {
+        Text = text;
+        Image = null;
+    }
 }
