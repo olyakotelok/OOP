@@ -18,4 +18,6 @@
 
 ❓ Фотка с кнопкой
 
+🆕 Список городов России
+
 https://docs.google.com/spreadsheets/d/1JTXw_AlQ8wySpXlf8J2ENixYMK5nIBkGlD19LIMPibE/edit#gid=1953543006&fvid=1656309064
