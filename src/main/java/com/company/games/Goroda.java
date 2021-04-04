@@ -14,6 +14,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.HashSet;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 public class Goroda implements IGame {
@@ -37,18 +39,10 @@ public class Goroda implements IGame {
         } catch (IOException | InterruptedException e) {
             return new String[]{"Москва", "Амстердам", "Анадырь", "Ростов", "Волгоград", "Донецк"};
         }
-
-        var resp = new JSONObject("{\"cities\": [" + response.body().substring(1, response.body().length() - 1) + "}");
- //       var resp_array = resp.getJSONArray("cities");
-        System.out.println(resp.getJSONArray("cities"));
-        return null;
-//        String[] result = new String[]{};
-//        for (var i = 0; i < resp.length(); i++){
-//            var name = resp[i].getString("name");
-//            result[i] = name;
-//        }
-
-//        return result;
+        var resp = new JSONArray(response.body());
+        return IntStream.range(0, resp.length())
+                .mapToObj(index -> ((JSONObject)resp.get(index)).optString("name"))
+                .collect(Collectors.toList()).toArray(new String[resp.length()]);
     }
 
     public String start() {
