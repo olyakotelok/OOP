@@ -13,21 +13,21 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.HashSet;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
 public class Goroda implements IGame {
-    private final String[] cities = getCities();
+    private final List<String> cities = getCities();
     private final HashSet<String> usedCities = new HashSet<>();
-    private String currentCity = "Амстердам";
-    private String lastLetter = "м";
+    private String currentCity = cities.get(0);
+    private String lastLetter = currentCity.substring(currentCity.length() - 1);
     private Boolean finished = false;
     private String lastMessage;
     private final WikiApi wikiApi = new WikiApi();
 
-    public String[] getCities() {
+    public List<String> getCities() {
         String url = "https://raw.githubusercontent.com/pensnarik/russian-cities/master/russian-cities.json";
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
@@ -37,16 +37,19 @@ public class Goroda implements IGame {
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
-            return new String[]{"Москва", "Амстердам", "Анадырь", "Ростов", "Волгоград", "Донецк"};
+            return Arrays.asList("Амстердам", "Анадырь", "Ростов", "Волгоград", "Донецк");
         }
         var resp = new JSONArray(response.body());
-        return IntStream.range(0, resp.length())
+        List<String> cities = IntStream.range(0, resp.length())
                 .mapToObj(index -> ((JSONObject)resp.get(index)).optString("name"))
-                .collect(Collectors.toList()).toArray(new String[resp.length()]);
+                .collect(Collectors.toList());
+        Collections.shuffle(cities);
+
+        return cities;
     }
 
     public String start() {
-        return (currentCity == "Амстердам" ? "Начнем" : "Продолжим") + " играть в города!\n" +
+        return (currentCity == cities.get(0) ? "Начнем" : "Продолжим") + " играть в города!\n" +
                 "Я называю город, ты называешь город на последнюю букву моего и так далее...\n" +
                 "Чтобы закончить, введи: хватит\n" +
                 currentCity;
