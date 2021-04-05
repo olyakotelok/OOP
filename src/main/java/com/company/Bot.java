@@ -121,10 +121,6 @@ public class Bot {
         }
     }
 
-    private Message stringToMessage(String text) {
-        return new Message(text, null);
-    }
-
     private String finish() {
         if (game instanceof Goroda) {
             games[numberGame] = new Goroda();

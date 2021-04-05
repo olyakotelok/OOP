@@ -77,12 +77,31 @@ public class Goroda implements IGame {
             updateCurrentCity(city);
             return save(info == null
                     ? city
-                    : String.join("\n", "<b>" + info.Name + "</b>", info.Info), info.Image
+                    : String.join("\n",
+                        "<b>" + escapeHtml(info.Name) + "</b>",
+                        trimInfo(escapeHtml(info.Info))),
+                    info.Image
             );
         }
 
         finished = true;
         return save("Я не знаю подходящего города, игра окончена!");
+    }
+
+    private String trimInfo(String info) {
+        do {
+            int index = info.lastIndexOf('.');
+            info = info.substring(0, index);
+        } while (info.length() > 900);
+
+        return info + ".";
+    }
+
+    private String escapeHtml(String text) {
+        return text
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;");
     }
 
     @Override

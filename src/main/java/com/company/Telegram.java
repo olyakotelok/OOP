@@ -13,7 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import com.company.WikiApi;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -113,7 +113,7 @@ public class Telegram extends TelegramLongPollingBot implements ICommunicationTy
             }
             Bot bot = bots.get(id);
             var resMsg = bot.communicate(message.Text);
-            if (resMsg.Image == null) {
+            if (resMsg.Image == null || resMsg.Image.isEmpty()) {
                 sendMessage(resMsg.Text, bot.inGame());
             }
             else {
