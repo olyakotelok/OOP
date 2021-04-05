@@ -16,14 +16,13 @@ public class WikiApi {
         HttpResponse<String> response = requestWikiApi(cityName);
         try {
             return parseJson(response);
-        } catch (Exception e){
+        } catch (Exception e) {
             response = requestWikiApi(cityName + "_(город)");
             return parseJson(response);
         }
     }
 
-    private static HttpResponse<String> requestWikiApi(String cityName){
-        System.out.println(cityName);
+    private static HttpResponse<String> requestWikiApi(String cityName) {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(API_ENDPOINT + cityName))
@@ -36,7 +35,7 @@ public class WikiApi {
         }
     }
 
-    private static CityInfo parseJson(HttpResponse<String> response){
+    private static CityInfo parseJson(HttpResponse<String> response) {
         JSONObject data = new JSONObject(response.body());
         String id = data
                 .getJSONObject("query")
@@ -51,10 +50,6 @@ public class WikiApi {
         var info = answer.getString("extract");
         var image = answer.getJSONObject("thumbnail").getString("source");
 
-        return new CityInfo(
-                name,
-                info.length() > 1000 ? info.substring(0, 1000) : info,
-                image
-        );
+        return new CityInfo(name, info, image);
     }
 }
